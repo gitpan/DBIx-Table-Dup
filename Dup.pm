@@ -26,10 +26,18 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(
 	
 );
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 # Preloaded methods go here.
+
+sub date_string {
+
+    my $d = lc `date +%b_%d_%H_%M_%S`;
+    chomp $d;
+    $d;
+
+}
 
 sub this {
 
@@ -84,17 +92,19 @@ DBIx::Table::Dup - Perl module to (return SQL to) create duplicate copy of table
 
  use DBIx::Table::Dup;
 
- sub mktmptbl {
+sub mktmptbl {
 
     my $src_table = shift;
-    my $date = lc `date +%b_%d_%H_%M_%S`;
-    chomp $date;
 
-    "${src_table}_$date";
- }
+
+    "${src_table}_" . DBIx::Table::Dup::date_string;
+}
 
 
  $dup_tbl_name = mktmptbl($src_tbl_name);
+
+ my $append = "Type=InnoDB"; 
+
 
  # just return the SQL for the table to create. Do not create table
  my $create_sql = DBIx::Table::Dup->this ($dbh, $src_tbl_name, $dup_tbl_name, 0);
@@ -103,7 +113,7 @@ DBIx::Table::Dup - Perl module to (return SQL to) create duplicate copy of table
  my $create_sql = DBIx::Table::Dup->this ($dbh, $src_tbl_name, $dup_tbl_name, 1);
 
  # append this to the create string
- DBIx::Table::Dup->this ($dbh, $src_tbl_name, $dup_tbl_name, 1, "Type=InnoDB");
+                  DBIx::Table::Dup->this ($dbh, $src_tbl_name, $dup_tbl_name, 1, $append);
 
  
 
