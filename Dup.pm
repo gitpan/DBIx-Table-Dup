@@ -26,7 +26,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(
 	
 );
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 # Preloaded methods go here.
@@ -47,22 +47,22 @@ sub this {
 
     $dup_name or die 'must supply table dup table name';
 
-    warn $dbh;
+ #   warn $dbh;
 
     my $schema = new_native DBIx::DBSchema $dbh;
 
-    warn $schema;
+#    warn $schema;
 
     my @table_names = $schema->tables;
 
-    warn "@table_names";
+#    warn "@table_names";
 
     grep { $tbl_name eq $_ } @table_names or die
       "$tbl_name not found in @table_names";
 
     my $table = $schema->table($tbl_name);
 
-    warn $table;
+#    warn $table;
 
     my ($table_create) = $table->sql_create_table($dbh);
 
@@ -72,7 +72,7 @@ sub this {
 
     return $table_create unless $create;
 
-    warn $table_create;
+#    warn $table_create;
 
     $dbh->do($table_create);
 
